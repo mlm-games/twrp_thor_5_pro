@@ -15,7 +15,7 @@
 #
 
 # Original is device/eastaeon/XY_D01_LF_AWBL
-LOCAL_PATH := device/mediatek/thor_5_pro
+LOCAL_PATH := device/zeblaze/thor5pro
 
 # Architecture
 TARGET_ARCH := arm

@@ -1,9 +1,21 @@
-# BoardConfig.mk for Zeblaze Thor 5 Pro (TWRP) - 32-bit configuration
+#
+# Copyright (C) 2017 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
-# Platform
-TARGET_BOARD_PLATFORM := mt6739
-TARGET_NO_BOOTLOADER := true
-TARGET_BOOTLOADER_BOARD_NAME := mt6739
+# Original is device/eastaeon/XY_D01_LF_AWBL
+LOCAL_PATH := device/mediatek/thor_5_pro
 
 # Architecture
 TARGET_ARCH := arm
@@ -11,58 +23,51 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_VARIANT := cortex-a53
-TARGET_CPU_SMP := true
+
+TARGET_BOARD_PLATFORM := mt6739
+
+# Bootloader
+TARGET_BOOTLOADER_BOARD_NAME := mt6739
+TARGET_NO_BOOTLOADER := true
 
 # Kernel
 BOARD_KERNEL_BASE := 0x40000000
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32S1,32S1 androidboot.selinux=permissive
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_KERNEL_CMDLINE := bootopt=64S3,32S1,32S1
-BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x04f88000 --second_offset 0x00e88000 --tags_offset 0x03f88000
+BOARD_TAGS_OFFSET := 0x04000000
+BOARD_RAMDISK_OFFSET := 0x05000000
+BOARD_KERNEL_OFFSET := 0x00008000
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
+BOARD_MKBOOTIMG_ARGS := --kernel_offset $(BOARD_KERNEL_OFFSET) --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_TAGS_OFFSET)
 
 # Partitions
-BOARD_BOOTIMAGE_PARTITION_SIZE := 25165824 # 24MB
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 25165824 # 24MB
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2684354560 # 2.5GB
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 34359738368 # 32GB
-BOARD_CACHEIMAGE_PARTITION_SIZE := 452984832 # 432MB
-BOARD_FLASH_BLOCK_SIZE := 131072 # 128KB
-
-# File systems
-TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
+BOARD_BOOTIMAGE_PARTITION_SIZE := 25165824
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 25165824
+#BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2684354560
+#BOARD_USERDATAIMAGE_PARTITION_SIZE := 34359738368
+#bBOARD_CACHEIMAGE_PARTITION_SIZE := 452984832
+BOARD_FLASH_BLOCK_SIZE := 131072
 
 # Recovery
-TARGET_RECOVERY_FSTAB := device/zeblaze/thor5pro/fstab.mt6739
+TARGET_USERIMAGES_USE_EXT4 := true
 
 # TWRP Configuration
 TW_THEME := watch_mdpi
 TW_ROUND_SCREEN := true
 TW_SCREEN_BLANK_ON_BOOT := true
-TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
+BOARD_HAS_FLIPPED_SCREEN := true
+RECOVERY_GRAPHICS_USE_LINELENGTH := true
+TW_INCLUDE_CRYPTO := true
+TW_REBOOT_BOOTLOADER := true
+TW_REBOOT_RECOVERY := true
+BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_HAS_LARGE_FILESYSTEM := true
+RECOVERY_SDCARD_ON_DATA := true
+BOARD_HAS_NO_REAL_SDCARD := true
+TW_EXCLUDE_SUPERSU := true
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/etc/twrp.fstab
+TW_BRIGHTNESS_PATH := "/sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness"
+BOARD_RECOVERY_SWIPE := true
+BOARD_SUPPRESS_EMMC_WIPE := true
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 128
-TW_INCLUDE_NTFS_3G := true
-TW_NO_EXFAT_FUSE := true
-TW_EXCLUDE_SUPERSU := true
-TW_EXTRA_LANGUAGES := true
-TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_CRYPTO_FBE := true
-TW_USE_TOOLBOX := true
-
-# Display
-TARGET_SCREEN_WIDTH := 320
-TARGET_SCREEN_HEIGHT := 320
-
-# Misc TWRP Configurations
-RECOVERY_SDCARD_ON_DATA := true
-TW_INCLUDE_RESETPROP := true
-TW_EXCLUDE_DEFAULT_USB_INIT := true
-TW_INPUT_BLACKLIST := "hbtp_vm"
-TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
-
-# Debug flags
-TWRP_INCLUDE_LOGCAT := true
-TARGET_USES_LOGD := true
-
-# 32-bit specific
-TARGET_USES_32_BIT_BINDER := true

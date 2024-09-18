@@ -32,7 +32,7 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
 # Recovery
-TARGET_RECOVERY_FSTAB := device/zeblaze/thor5pro/recovery.fstab
+TARGET_RECOVERY_FSTAB := device/zeblaze/thor5pro/fstab.mt6739
 
 # TWRP Configuration
 TW_THEME := watch_mdpi

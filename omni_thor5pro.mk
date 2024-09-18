@@ -9,4 +9,4 @@ PRODUCT_DEVICE := thor5pro
 PRODUCT_NAME := omni_thor5pro
 PRODUCT_BRAND := Mediatek
 PRODUCT_MODEL := thor5pro
-PRODUCT_MANUFACTURER := Mediatek
+PRODUCT_MANUFACTURER := zeblaze

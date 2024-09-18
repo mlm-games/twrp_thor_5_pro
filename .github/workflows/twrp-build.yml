@@ -1,0 +1,86 @@
+name: TWRP
+
+on:
+  push:
+    branches:
+      - '**'   # Matches all branches
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+    branches:
+      - '**'   # Matches all branches
+    paths-ignore:
+      - 'README.md'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build (default branch if not mentioned)'
+        required: false
+        default: ''
+        type: string
+      upload_releases:
+        description: 'Upload releases'
+        required: true
+        default: 'true'
+        type: boolean
+      mark_prerelease:
+        description: 'Mark as prerelease'
+        required: true
+        default: 'false'
+        type: boolean
+
+jobs:
+  build:
+    name: Build TWRP by ${{ github.actor }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      # Set BRANCH_NAME based on the event type
+      BRANCH_NAME: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref_name }}
+      UPLOAD_RELEASES: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.upload_releases || 'false' }}
+      MARK_PRERELEASE: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.mark_prerelease || 'false' }}
+    steps:
+      - name: Clean Ubuntu
+        uses: rokibhasansagar/slimhub_actions@main
+
+      - name: Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 12
+
+      - name: Build TWRP Recovery
+        uses: mlm-games/TWRP-recovery-build-action@main
+        with:
+          MANIFEST_BRANCH: 'twrp-7.1'
+          DEVICE_TREE_BRANCH: ${{ env.BRANCH_NAME }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: inputs.upload_releases == false || github.event_name != 'workflow_dispatch'
+        with:
+          name: TWRP-Recovery-${{ github.event.repository.name }}
+          path: |
+            ${{ env.OUTPUT_DIR }}/*.img
+            ${{ env.OUTPUT_DIR }}/*.tar
+            ${{ env.OUTPUT_DIR }}/*vbmeta*
+            ${{ env.OUTPUT_DIR }}/*.cpio
+      - name: Upload to Release
+        if: github.event_name == 'workflow_dispatch' && env.UPLOAD_RELEASES == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ env.OUTPUT_DIR }}/*.img
+            ${{ env.OUTPUT_DIR }}/*.tar
+            ${{ env.OUTPUT_DIR }}/*vbmeta*
+            ${{ env.OUTPUT_DIR }}/ramdisk-recovery.*
+          name: Unofficial ${{ github.workflow }} for ${{ env.DEVICE_NAME }} // ${{ format('yyyyMMdd', github.event.head_commit.timestamp) }}
+          tag_name: ${{ github.run_id }}
+          body: |
+            Build: ${{ env.BRANCH_NAME }}
+            Device: [Device Tree/Branch](${{ env.DEVICE_TREE }}/tree/${{ env.BRANCH_NAME }})
+            Commit: Most recent [commit](${{ github.server_url }}/${{ github.repository }}/commit/$(git rev-parse --short HEAD)) during building.
+            MD5 (img): ${{ env.MD5_IMG }}
+            MD5 (zip): ${{ env.MD5_ZIP }}
+          prerelease: ${{ env.MARK_PRERELEASE }}
+        continue-on-error: true

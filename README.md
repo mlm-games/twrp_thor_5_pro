@@ -4,7 +4,11 @@ Just a dummy tree (extracted from thor 5's firmware), tried using `fastboot boot
 
 **Update 1: Booted into twrp recovery but touch doesn't work. Will try to find a fix**
 
+## Unlocking bootloader
 
+Does not work like normal since it has no vol + button being simulated (the top button acts as the power button, and the bottom button acts as the vol - button for rebooting stuff), so if u do `fastboot flashing unlock` in bootloader, it will ask u to tap the vol + button...
+
+Tried some stuff, and in the end mtkclient on liveusb worked (mtkclient gui -> unlock bootloader). It doesnt clear any data but i would advise to backup before doing this incase something goes wrong.
 
 
 # TWRP for Zeblaze Thor 5 Pro

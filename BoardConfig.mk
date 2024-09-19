@@ -54,10 +54,8 @@ TARGET_USERIMAGES_USE_EXT4 := true
 # USB
 
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.usb0/lun.0/file
-TW_MTP_DEVICE := /dev/mtp_usb
-TW_HAS_MTP := true
-ARCH_ARM_HAVE_NEON := true
-ARCH_ARM_HAVE_ARMV7A := true
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.usb.config=mtp
 
 # TWRP Configuration
 TW_THEME := watch_mdpi
@@ -84,3 +82,12 @@ TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone0/temp
 # Add magiskboot and resetprop
 TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_REPACKTOOLS := true
+
+# Logging
+TWRP_INCLUDE_LOGCAT := true
+TARGET_USES_LOGD := true
+
+# What are these for?
+BOARD_USES_MTK_HARDWARE := true
+ARCH_ARM_HAVE_NEON := true
+ARCH_ARM_HAVE_ARMV7A := true

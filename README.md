@@ -1,8 +1,11 @@
-# twrp_thor_5_pro
+# My notes and past info.
 
 Just a dummy tree (extracted from thor 5's firmware), tried using `fastboot boot twrp.img`, boots to black screen for a minute, and `fastboot flash recovery twrp.img` and rebooting to recovery causes it to reboot to system and replace twrp with stock recovery.
 
-***Update 1: Booted into twrp recovery but touch doesn't work. Will try to find a fix***
+**Update 1: Booted into twrp recovery but touch doesn't work. Will try to find a fix**
+
+
+
 
 # TWRP for Zeblaze Thor 5 Pro
 

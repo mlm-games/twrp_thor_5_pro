@@ -10,7 +10,7 @@ Does not work like normal since it has no vol + button being simulated (the top 
 
 Tried some stuff, and in the end mtkclient on liveusb worked (mtkclient gui -> unlock bootloader). It doesnt clear any data but i would advise to backup before doing this incase something goes wrong.
 
-Then flashed the magisk [boot.img](https://github.com/mlm-games/twrp_thor_5_pro/releases/tag/v1.1) (`fastboot flash boot patched-boot.img`) and then flashed twrp using the official twrp app (or u could rename recovery-from-boot.p to .bak). 
+Then flashed the magisk patched [boot.img](https://github.com/mlm-games/twrp_thor_5_pro/releases/tag/v1.1) for 2019-12 firmware (`fastboot flash boot patched-boot.img`) and then flashed twrp using the official twrp app (or u could rename recovery-from-boot.p to .bak). If u are on older firmware. Just use magisk 27.0 to patch boot.img
 
 
 # TWRP for Zeblaze Thor 5 Pro

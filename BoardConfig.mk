@@ -52,10 +52,10 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_USERIMAGES_USE_EXT4 := true
 
 # USB
-
+TW_MTP_DEVICE := /dev/mtp_usb
+TW_HAS_MTP := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.usb0/lun.0/file
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.usb.config=mtp
+TW_EXCLUDE_DEFAULT_USB_INIT := true
 
 # TWRP Configuration
 TW_THEME := watch_mdpi

@@ -1,3 +1,6 @@
+import /init.usb.configfs.rc
+import /init.usb.rc
+
 on init
 #	fake to CDP case
 #	write /sys/module/musb_hdrc/parameters/musb_skip_charge_detect 1

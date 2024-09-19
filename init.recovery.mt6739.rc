@@ -1,40 +1,65 @@
 on init
-    # Fake to CDP case
-    # write /sys/module/musb_hdrc/parameters/musb_skip_charge_detect 1
-
     # Aliases must be set at android_disable state
     write /sys/class/android_usb/android0/f_ffs/aliases adb
 
-    # Set battery thread free
-    # write /sys/class/android_usb/android0/enable 0
-    # write /sys/class/android_usb/android0/idVendor 0E8D
-    # write /sys/class/android_usb/android0/idProduct 2008
-    # write /sys/class/android_usb/android0/functions mtp
-    # write /sys/class/android_usb/android0/enable 1
+    # Initialize USB in disabled state
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 0E8D
+    write /sys/class/android_usb/android0/idProduct 2008
+    # Set default function to MTP and ADB
+    write /sys/class/android_usb/android0/functions mtp,adb
+    write /sys/class/android_usb/android0/enable 1
 
-    # Distinguish USB should connect or not by this, CDP vs SDP
+    # Distinguish USB connection type, CDP vs SDP
     write /sys/devices/platform/mt_usb/cmode 2
 
+    # Load necessary kernel modules
     insmod /lib/modules/mntl.ko
+    insmod /lib/modules/usb_storage.ko  # Ensure USB Storage Module is loaded
 
-    # Add USB mass storage support
+    # Configure storage backend for UMS
+    # Replace '/dev/block/sda1' with your actual storage partition
+    write /sys/class/android_usb/android0/lun/nofua 1
+    write /sys/class/android_usb/android0/lun/nolock 0
+    write /sys/class/android_usb/android0/lun/file /dev/block/sda1  # UMS storage backend
+
+# Handler for MTP Configuration
+on property:sys.usb.config=mtp,adb
     write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 0e8d
-    write /sys/class/android_usb/android0/idProduct 2006
-    write /sys/class/android_usb/android0/f_acm/instances 1
-    write /sys/class/android_usb/android0/functions mass_storage,adb,acm
+    write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
+    write /sys/class/android_usb/android0/idProduct 2008
+    write /sys/class/android_usb/android0/functions mtp,adb
     write /sys/class/android_usb/android0/enable 1
     start adbd
+    setprop sys.usb.state ${sys.usb.config}
 
-on property:ro.debuggable=1
-    # Restore cmode to normal for making USB enumeration
-    write /sys/devices/platform/mt_usb/cmode 1
+# Handler for UMS Configuration
+on property:sys.usb.config=mass_storage,adb
+    # Unmount storage to prepare for UMS
+    umount /storage/emulated/0  # Adjust based on actual mount point
 
-    # Optionally, if you want to change the USB configuration when debug is enabled
     write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 0e8d
-    write /sys/class/android_usb/android0/idProduct 2006
-    write /sys/class/android_usb/android0/f_acm/instances 1
-    write /sys/class/android_usb/android0/functions mass_storage,adb,acm
+    write /sys/class/android_usb/android0/idVendor 0E8D
+    write /sys/class/android_usb/android0/idProduct 2029
+    # Specify the block device for UMS
+    write /sys/class/android_usb/android0/lun/file /dev/block/sda1  # Replace as needed
+    write /sys/class/android_usb/android0/functions mass_storage,adb
     write /sys/class/android_usb/android0/enable 1
     start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
+# Handler for Additional Configurations (if needed)
+on property:sys.usb.config=gs3,dual_acm
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor $sys.usb.vid
+    write /sys/class/android_usb/android0/idProduct 202E
+    write /sys/class/android_usb/android0/f_acm/port_index 1,4
+    write /sys/devices/platform/mt_usb/saving 1
+    # Include mass_storage if needed
+    write /sys/class/android_usb/android0/functions mass_storage,adb,acm
+    write /sys/class/android_usb/android0/enable 1
+    chown system radio /dev/ttyGS3
+    chmod 0660 /dev/ttyGS3
+    start adbd
+    setprop sys.usb.state $sys.usb.config
+    setprop sys.usb.acm_idx 1,4

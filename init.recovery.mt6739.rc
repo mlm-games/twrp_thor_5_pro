@@ -1,22 +1,40 @@
 on init
-#	fake to CDP case
-#	write /sys/module/musb_hdrc/parameters/musb_skip_charge_detect 1
+    # Fake to CDP case
+    # write /sys/module/musb_hdrc/parameters/musb_skip_charge_detect 1
 
-#	aliases must be set at android_disable state
+    # Aliases must be set at android_disable state
     write /sys/class/android_usb/android0/f_ffs/aliases adb
 
-# 	set battery thread free
+    # Set battery thread free
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 0E8D
     write /sys/class/android_usb/android0/idProduct 2008
     write /sys/class/android_usb/android0/functions mtp
     write /sys/class/android_usb/android0/enable 1
 
-# 	distinguish USB shoulde connect or not by this, CDP vs SDP
-	write /sys/devices/platform/mt_usb/cmode 2
+    # Distinguish USB should connect or not by this, CDP vs SDP
+    write /sys/devices/platform/mt_usb/cmode 2
 
-	insmod /lib/modules/mntl.ko
+    insmod /lib/modules/mntl.ko
+
+    # Add USB mass storage support
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 0e8d
+    write /sys/class/android_usb/android0/idProduct 2006
+    write /sys/class/android_usb/android0/f_acm/instances 1
+    write /sys/class/android_usb/android0/functions mass_storage,adb,acm
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
 
 on property:ro.debuggable=1
-# 	restore cmode to normal for making USB enumeration
-	write /sys/devices/platform/mt_usb/cmode 1
+    # Restore cmode to normal for making USB enumeration
+    write /sys/devices/platform/mt_usb/cmode 1
+
+    # Optionally, if you want to change the USB configuration when debug is enabled
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 0e8d
+    write /sys/class/android_usb/android0/idProduct 2006
+    write /sys/class/android_usb/android0/f_acm/instances 1
+    write /sys/class/android_usb/android0/functions mass_storage,adb,acm
+    write /sys/class/android_usb/android0/enable 1
+    start adbd

@@ -1,8 +1,8 @@
 # My notes and past info.
 
-Just a dummy tree (extracted from thor 5's firmware), tried using `fastboot boot twrp.img`, boots to black screen for a minute, and `fastboot flash recovery twrp.img` and rebooting to recovery causes it to reboot to system and replace twrp with stock recovery.
+Tried using `fastboot boot twrp.img`, boots to black screen for a minute, and `fastboot flash recovery twrp.img` and rebooting to recovery causes it to reboot to system and replace twrp with stock recovery.
 
-**Update 1: Booted into twrp recovery but touch doesn't work. Will try to find a fix**
+**Update 1: Touch works now**
 
 ## Unlocking bootloader
 
@@ -69,3 +69,4 @@ Contributions to this project are welcome. Please submit pull requests for any i
 ## Credits
 
 - Team Win Recovery Project (TWRP)
+- [Openmatchproject](https://xdaforums.com/t/twrp-roms-openwatch-project-kingwear-zeblaze-lemfo-diggro-finow-microwear.3816674/)

@@ -52,7 +52,7 @@ jobs:
       - name: Build TWRP Recovery
         uses: mlm-games/TWRP-recovery-build-action@main
         with:
-          MANIFEST_BRANCH: 'twrp-7.1'
+          MANIFEST_BRANCH: 'twrp-8.1'
           DEVICE_TREE_BRANCH: ${{ env.BRANCH_NAME }}
 
       - name: Upload Artifacts

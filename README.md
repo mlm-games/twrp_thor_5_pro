@@ -69,4 +69,4 @@ Contributions to this project are welcome. Please submit pull requests for any i
 ## Credits
 
 - Team Win Recovery Project (TWRP)
-- [Openmatchproject](https://xdaforums.com/t/twrp-roms-openwatch-project-kingwear-zeblaze-lemfo-diggro-finow-microwear.3816674/)
+- [Openwatchproject](https://xdaforums.com/t/twrp-roms-openwatch-project-kingwear-zeblaze-lemfo-diggro-finow-microwear.3816674/)
